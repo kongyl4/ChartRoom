@@ -24,6 +24,7 @@ public class ServerOutputThread implements Runnable {
         try {
             os = socket.getOutputStream();
             os.write(scanner.nextLine().getBytes());
+
         } catch (IOException e) {
             e.printStackTrace();
         }

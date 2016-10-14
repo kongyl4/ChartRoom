@@ -12,9 +12,12 @@ public class ServerMain {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(10002);
+        System.out.println(serverSocket.getLocalPort());
         while (true){
             Socket socket = serverSocket.accept();
             if(socket.isConnected()){
+                System.out.println(socket.getPort());
+
                 System.out.println("****");
                 ServerInputThread serverInputThread = new ServerInputThread(socket);
                 Thread t1=new Thread(serverInputThread);
@@ -22,6 +25,7 @@ public class ServerMain {
                 Thread t2=new Thread(new ServerOutputThread(socket));
                 t2.start();
             }
+
 
         }
 

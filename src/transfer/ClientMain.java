@@ -12,6 +12,7 @@ public class ClientMain {
         Socket socket=null;
          try {
             socket=new Socket("localhost",10002);
+             System.out.println(socket.getPort());
         } catch (IOException e) {
             e.printStackTrace();
         }
