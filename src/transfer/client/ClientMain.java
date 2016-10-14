@@ -20,7 +20,10 @@ public class ClientMain {
         Socket socket = null;
         try {
             socket = new Socket(Config.HOST, Config.PORT);
-            outputThreadPool.execute(new ClientOutputThread(socket));
+            System.out.println(socket.getLocalPort());
+            ClientOutputThread command = new ClientOutputThread();
+            command.addSocket(socket);
+            outputThreadPool.execute(command);
             inputThreadPool.execute(new ClientInputThread(socket));
         } catch (IOException e) {
             e.printStackTrace();

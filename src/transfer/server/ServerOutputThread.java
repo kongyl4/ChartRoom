@@ -9,8 +9,4 @@ import transfer.common.AbstractOutputThread;
  */
 public class ServerOutputThread extends AbstractOutputThread {
 
-    public ServerOutputThread(Socket socket) {
-        super(socket);
-    }
-
 }
