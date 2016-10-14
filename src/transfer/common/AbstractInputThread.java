@@ -1,4 +1,4 @@
-package transfer;
+package transfer.common;
 
 import java.io.DataInputStream;
 import java.io.IOException;

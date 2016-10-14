@@ -1,9 +1,11 @@
-package transfer;
+package transfer.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Scanner;
+
+import transfer.common.AbstractOutputThread;
 
 /**
  * Created by kongyl4 on 2016/10/11.

@@ -1,41 +1,43 @@
-package transfer;
+package transfer.client;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.net.Socket;
-import java.util.Scanner;
+
+import transfer.common.AbstractInputThread;
 
 /**
  * Created by kongyl4 on 2016/10/11.
  */
-public class ClientOutputThread implements Runnable {
+public class ClientInputThread implements Runnable{
     Socket socket=null;
-    public ClientOutputThread(Socket socket) {
+    public ClientInputThread(Socket socket) {
         super();
         this.socket=socket;
     }
-
     @Override
     public void run() {
-        OutputStream os=null;
-        Scanner scanner=new Scanner(System.in);
-
-     //   while(true){
+        InputStream is=null;
+        byte[] b=new byte[100];
+        //while(true){
             try {
-                os=socket.getOutputStream();
-                os.write(scanner.nextLine().getBytes());
+                System.out.println("port="+socket.getPort());
+                is=socket.getInputStream();
+                is.read(b);
+                System.out.println(new String(b));
             } catch (IOException e) {
                 e.printStackTrace();
             }
             /*finally {
                 try {
-                    os.close();
+                    is.close();
                     socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }*/
-      //  }
+        //}
 
     }
 }

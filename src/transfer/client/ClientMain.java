@@ -1,7 +1,9 @@
-package transfer;
+package transfer.client;
 
 import java.io.IOException;
 import java.net.Socket;
+
+import transfer.common.Config;
 
 /**
  * Created by kongyl4 on 2016/10/11.

@@ -1,4 +1,4 @@
-package transfer;
+package transfer.server;
 
 
 import java.io.BufferedReader;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+
+import transfer.common.AbstractInputThread;
 
 /**
  * Created by kongyl4 on 2016/10/11.

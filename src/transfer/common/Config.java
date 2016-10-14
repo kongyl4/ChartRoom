@@ -1,4 +1,4 @@
-package transfer;
+package transfer.common;
 
 /**
  * Created by wyx on 2016/10/14.
