@@ -13,9 +13,9 @@ import chat.packet.Packet;
  */
 public abstract class HandlerObserverble {
 
-    private final List<Handler> handlerList = new CopyOnWriteArrayList<>();
+    private final List<Handler<? extends Packet>> handlerList = new CopyOnWriteArrayList<>();
 
-    public void notifyHandlers(Packet packet, SocketConnector connector) {
+    public <T extends Packet> void notifyHandlers(T packet, SocketConnector connector) {
         for (Handler handler : handlerList) {
             Class<? extends Packet> entityClass = null;
             Type t = handler.getClass().getGenericInterfaces()[0];
@@ -31,7 +31,7 @@ public abstract class HandlerObserverble {
         }
     }
 
-    public void registerHandler(Handler handler) {
+    public void registerHandler(Handler<? extends Packet> handler) {
         handlerList.add(handler);
     }
 
