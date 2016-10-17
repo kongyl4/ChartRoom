@@ -13,4 +13,9 @@ public class ClientInputThread extends AbstractInputThread {
         super(socket);
     }
 
+    @Override
+    protected void handleInput(String str) {
+        System.out.println(str);
+    }
+
 }

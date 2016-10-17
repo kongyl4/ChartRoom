@@ -2,6 +2,7 @@ package transfer.client;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,8 +17,11 @@ public class ClientMain {
     private static final ExecutorService outputThreadPool = Executors.newSingleThreadExecutor();
 
     public static void main(String[] args) {
-        //while(true){
+
         Socket socket = null;
+       /* Scanner scanner=null;
+        System.out.println("请输入您的用户名：");
+        String name=scanner.nextLine();*/
         try {
             socket = new Socket(Config.HOST, Config.PORT);
             outputThreadPool.execute(new ClientOutputThread(socket));
@@ -29,7 +33,7 @@ public class ClientMain {
             outputThreadPool.shutdown();
         }
 
-        //}
+
 
     }
 }

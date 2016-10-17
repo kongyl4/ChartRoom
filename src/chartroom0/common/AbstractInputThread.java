@@ -10,15 +10,24 @@ import java.util.LinkedList;
 import java.util.Map;
 
 
-public class AbstractInputThread implements Runnable {
+public abstract class AbstractInputThread implements Runnable {
     private final Socket socket;
 
 
     private  boolean running = true;
     private String name=null;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     LinkedList<Socket> list = new LinkedList<Socket>();
 
-    private Map<String,Socket> map=new HashMap<String, Socket>();
+    protected Map<String,Socket> map=new HashMap<String, Socket>();
     public AbstractInputThread(Socket socket) {
         this.socket = socket;
     }
@@ -35,6 +44,8 @@ public class AbstractInputThread implements Runnable {
         running = false;
     }
 
+    protected abstract void handleInput(String str) throws IOException;
+
     @Override
     public void run() {
         DataInputStream is = null;
@@ -44,30 +55,26 @@ public class AbstractInputThread implements Runnable {
             while (running) {
                 String str=is.readUTF();
              //   if(!map.isEmpty()){
-                    String[] arr = str.split("\\s+");
-                    if(arr.length==2){
-                        if(arr[1].equals("login")){
-                            addMapList(arr[0],socket);
-                            System.out.println("输出");
-                        }else{
-                            Socket socket=map.get(arr[0]);
-                            DataOutputStream os = new DataOutputStream(socket.getOutputStream());
-                            os.writeUTF(str);
-                        }
-                    }else {
-                        for (Map.Entry<String, Socket> entry : map.entrySet()) {
-                            Socket socket = entry.getValue();
-                            DataOutputStream os = new DataOutputStream(socket.getOutputStream());
-                            os.writeUTF(str);
-                        }
-                    }
+                    handleInput(str);
                 //}
-                System.out.println(str);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             System.out.println("关闭输入连接");
+
+            for (Iterator<Map.Entry<String,Socket>> it= map.entrySet().iterator();it.hasNext();) {
+                try {
+                    Map.Entry<String,Socket> entry=it.next();
+                    Socket socket = entry.getValue();
+                    DataOutputStream os = new DataOutputStream(socket.getOutputStream());
+                    os.writeUTF(name +" logout");
+                }catch(Exception e){
+                    e.printStackTrace();
+                    it.remove();
+                }
+            }
+
             if (is != null) {
                 try {
                     is.close();

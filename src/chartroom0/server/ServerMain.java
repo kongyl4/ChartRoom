@@ -32,27 +32,36 @@ public class ServerMain {
             while (true) {
                 Socket socket = serverSocket.accept();
                 if (socket.isConnected()) {
-                    command.addSocket(socket);
-                    //System.out.println(command.getSocketList().size()+"上线");
-                    ServerInputThread sit = new ServerInputThread(socket);
-                    inputThreadPool.execute(sit);
-                    String name=null;
-                    Socket socket0=null;
-                    for (Map.Entry<String, Socket> entry : sit.getMapList().entrySet()){
-                         name=entry.getKey();
-                         socket0=entry.getValue();
+                    String name = null;
+                    try {
+                        DataInputStream is = new DataInputStream(socket.getInputStream());
+                        name = is.readUTF().split("\\s+")[0];
+                        System.out.println(name + "上线");
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    for (Map.Entry<String, Socket> entry : command.getMapList().entrySet()){
-                        sit.addMapList(entry.getKey(),entry.getValue());
-                        DataOutputStream os=new DataOutputStream(entry.getValue().getOutputStream());
-                        //sit.addMapList();
-                        os.writeUTF(entry.getKey()+"上线");
-                    }
+                    if (name != null) {
+                        command.addSocket(socket);
+                        ServerInputThread sit = new ServerInputThread(socket);
+                        sit.setName(name);
+                        for (Map.Entry<String, Socket> entry : command.getMapList().entrySet()) {
+                            sit.addMapList(entry.getKey(), entry.getValue());
+                            try {
+                                DataOutputStream os = new DataOutputStream(entry.getValue().getOutputStream());
+                                //sit.addMapList();
+                                os.writeUTF(name + "上线");
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
 
-                    for (ServerInputThread serverInputThread : serverInputThreadList) {
-                        serverInputThread.addMapList(name,socket0);
+                        for (ServerInputThread serverInputThread : serverInputThreadList) {
+                            serverInputThread.addMapList(name, socket);
+                        }
+                        command.putSocket(name, socket);
+                        serverInputThreadList.add(sit);
+                        inputThreadPool.execute(sit);
                     }
-                    serverInputThreadList.add(sit);
                 }
             }
         } catch (IOException e) {
