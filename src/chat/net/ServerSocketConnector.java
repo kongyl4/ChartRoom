@@ -24,7 +24,7 @@ public class ServerSocketConnector {
 
     private volatile boolean start;
 
-    private List<SocketConnector> socketConnectorList = new CopyOnWriteArrayList<>();
+    private List<SocketConnector> socketConnectorList = new CopyOnWriteArrayList<SocketConnector>();
 
     public ServerSocketConnector(int port, HandlerObserverble observerble) {
         this.port = port;

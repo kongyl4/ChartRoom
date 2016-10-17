@@ -101,7 +101,7 @@ public class SocketConnector {
                     Packet packet = (Packet) ois.readObject();
                     observerble.notifyHandlers(packet, SocketConnector.this);
                 }
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 close();

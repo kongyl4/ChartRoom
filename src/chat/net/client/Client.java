@@ -64,11 +64,11 @@ public class Client extends HandlerObserverble {
     }
 
     public static void main(String[] args) {
-        Client client = new Client("127.0.0.1", 53862, "bbb");
+        Scanner in = new Scanner(System.in);
+        Client client = new Client("127.0.0.1", 53862, in.nextLine());
         client.registerHandler(new LogPacketHandler());
         client.login();
 
-        Scanner in = new Scanner(System.in);
         while (in.hasNextLine()) {
             String[] str = in.nextLine().split("\\s+");
             if (str.length == 1) {

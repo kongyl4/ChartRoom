@@ -25,7 +25,7 @@ public class Server extends HandlerObserverble {
 
     private ServerSocketConnector serverSocketConnector;
 
-    private Map<String, SocketConnector> connectorMap = new ConcurrentHashMap<>();
+    private Map<String, SocketConnector> connectorMap = new ConcurrentHashMap<String, SocketConnector>();
 
     private class LoginHandler implements Handler<LoginPacket> {
         @Override
