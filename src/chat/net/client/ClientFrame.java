@@ -44,6 +44,9 @@ public class ClientFrame extends JFrame {
 
     private StringBuffer sb = new StringBuffer();
 
+    private JScrollPane scrollPane = new JScrollPane(txtHistory,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
     private ClientFrame(Client client) {
         super("chat room");
         this.client = client;
@@ -63,13 +66,12 @@ public class ClientFrame extends JFrame {
         sendPanel.add(btnSend);
         txtHistory.setContentType("text/html");
         txtHistory.setEditable(false);
-        this.add(new JScrollPane(txtHistory,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+        this.add(scrollPane, BorderLayout.CENTER);
         this.add(listUserList, BorderLayout.EAST);
     }
 
     private void initListener() {
-        btnSend.addActionListener(new ActionListener() {
+        ActionListener l = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (listUserList.getSelectedIndex() > 1) {
@@ -79,7 +81,9 @@ public class ClientFrame extends JFrame {
                 }
                 txtMsg.setText("");
             }
-        });
+        };
+        btnSend.addActionListener(l);
+        txtMsg.addActionListener(l);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -92,7 +96,7 @@ public class ClientFrame extends JFrame {
             public boolean handle(LoginPacket packet, SocketConnector connector) {
                 userList.add(packet.getUsername());
                 listUserList.setListData(userList.toArray(new String[userList.size()]));
-                appendHistory("<font color='green'>" + packet.getUsername() + " login.</font>");
+                appendHistory(color("green", packet.getUsername()) + " login.</font>");
                 return true;
             }
         });
@@ -102,35 +106,38 @@ public class ClientFrame extends JFrame {
             public boolean handle(LogoutPacket packet, SocketConnector connector) {
                 userList.remove(packet.getUsername());
                 listUserList.setListData(userList.toArray(new String[userList.size()]));
-                appendHistory("<font color='red'>" + packet.getUsername() + " logout.</font>");
+                appendHistory(color("red", packet.getUsername()) + " logout.</font>");
                 return true;
             }
         });
         client.registerHandler(new Handler<SendPacket>() {
             @Override
             public boolean handle(SendPacket packet, SocketConnector connector) {
-                appendHistory("<font color='blue'>" + packet.getUsername() + "</font> to <font color='blue'>"
-                        + packet.getTo() + "</font> : \n" + "\t\t" + packet.getMsg());
+                appendHistory(color("blue", packet.getUsername()) + " to " + color("blue", packet.getTo())
+                        + " : <br/>&nbsp;&nbsp;&nbsp;&nbsp;" + packet.getMsg());
                 return true;
             }
         });
         client.registerHandler(new Handler<BroadcastPacket>() {
             @Override
             public boolean handle(BroadcastPacket packet, SocketConnector connector) {
-                appendHistory("<font color='blue'>" + packet.getUsername() + "</font> to <font color='blue'>all</font> : \n"
-                        + "\t" + packet.getMsg());
+                appendHistory(color("blue", packet.getUsername()) + " to " + color("blue", "all")
+                        + " : <br/>&nbsp;&nbsp;&nbsp;&nbsp;" + packet.getMsg());
                 return true;
             }
         });
         client.registerHandler(new Handler<UserListPacket>() {
             @Override
             public boolean handle(UserListPacket packet, SocketConnector connector) {
-                System.out.println(packet);
                 userList.addAll(packet.getUserList());
                 listUserList.setListData(userList.toArray(new String[userList.size()]));
                 return true;
             }
         });
+    }
+
+    private String color(String color, String msg) {
+        return "<font color='" + color + "'>" + msg + "</font>";
     }
 
     private void appendHistory(String msg) {
