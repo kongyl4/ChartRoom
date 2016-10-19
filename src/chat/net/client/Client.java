@@ -1,9 +1,6 @@
 package chat.net.client;
 
-import java.util.Scanner;
-
 import chat.handler.HandlerObserverble;
-import chat.handler.LogPacketHandler;
 import chat.net.SocketConnector;
 import chat.packet.BroadcastPacket;
 import chat.packet.LoginPacket;
@@ -63,19 +60,10 @@ public class Client extends HandlerObserverble {
         connector.send(packet);
     }
 
-    public static void main(String[] args) {
-        Client client = new Client("127.0.0.1", 53862, "bbb");
-        client.registerHandler(new LogPacketHandler());
-        client.login();
-
-        Scanner in = new Scanner(System.in);
-        while (in.hasNextLine()) {
-            String[] str = in.nextLine().split("\\s+");
-            if (str.length == 1) {
-                client.broadcast(str[0]);
-            } else {
-                client.send(str[0], str[1]);
-            }
-        }
+    @Override
+    public void onClose(SocketConnector connector) {
+        LogoutPacket logoutPacket = new LogoutPacket();
+        logoutPacket.setUsername(username);
+        notifyHandlers(logoutPacket, connector);
     }
 }

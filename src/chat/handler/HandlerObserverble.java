@@ -13,7 +13,7 @@ import chat.packet.Packet;
  */
 public abstract class HandlerObserverble {
 
-    private final List<Handler<? extends Packet>> handlerList = new CopyOnWriteArrayList<>();
+    private final List<Handler<? extends Packet>> handlerList = new CopyOnWriteArrayList<Handler<? extends Packet>>();
 
     public <T extends Packet> void notifyHandlers(T packet, SocketConnector connector) {
         for (Handler handler : handlerList) {
@@ -30,6 +30,8 @@ public abstract class HandlerObserverble {
             }
         }
     }
+
+    public abstract void onClose(SocketConnector connector);
 
     public void registerHandler(Handler<? extends Packet> handler) {
         handlerList.add(handler);

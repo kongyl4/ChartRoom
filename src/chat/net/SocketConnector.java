@@ -75,6 +75,7 @@ public class SocketConnector {
         if (start && socket.isConnected()) {
             try {
                 oos.writeObject(packet);
+                oos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
                 shutdown();
@@ -83,6 +84,10 @@ public class SocketConnector {
     }
 
     public void close() {
+        if (start) {
+            start = false;
+            observerble.onClose(this);
+        }
         if (socket != null) {
             try {
                 socket.close();
@@ -101,7 +106,9 @@ public class SocketConnector {
                     Packet packet = (Packet) ois.readObject();
                     observerble.notifyHandlers(packet, SocketConnector.this);
                 }
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } finally {
                 close();
