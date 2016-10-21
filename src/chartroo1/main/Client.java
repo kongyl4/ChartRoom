@@ -49,6 +49,14 @@ public class Client {
         String username=scanner.nextLine();
         Client client=new Client("localhost",50001,username);
         client.login();
+        while(scanner.hasNextLine()){
+            String[] str=scanner.nextLine().split("//s+");
+            if(str.length==1){
+             //   broadcast(str[0]);
+            }
+
+        }
+
 
     }
 }
