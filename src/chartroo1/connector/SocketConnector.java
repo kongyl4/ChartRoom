@@ -26,6 +26,7 @@ public class SocketConnector {
         this.port=port;
         this.username=username;
     }
+    //
     public void start(){
         try {
             socket=new Socket(host,port);
