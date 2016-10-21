@@ -13,7 +13,7 @@ public class TcpServer {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket=new ServerSocket(5000);//0-65535 前10000
         Socket socket=serverSocket.accept();
-        System.out.println("Connect Successfully!");
+        System.out.println("ServerSocketConnector Successfully!");
         InputStream is=socket.getInputStream();
         OutputStream os=socket.getOutputStream();
         Scanner scanner=new Scanner(System.in);

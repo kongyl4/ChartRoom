@@ -15,7 +15,7 @@ public class TcpClient {
         Socket socket=new Socket("localhost",5000);
         OutputStream os=socket.getOutputStream();
         InputStream is=socket.getInputStream();
-        String str="hello a!";
+        String str="hello Config!";
         Scanner scanner=new Scanner(System.in);
         os.write(scanner.nextLine().getBytes());
 
